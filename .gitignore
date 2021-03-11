@@ -14,4 +14,4 @@ ssl/
 *.out
 pkg/
 credentials.json
-
+token.json
