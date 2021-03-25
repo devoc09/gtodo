@@ -1,24 +1,12 @@
-/*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package cmd
 
 import (
 	"fmt"
+	"log"
 
+	"github.com/devoc09/gtodo/internal"
 	"github.com/spf13/cobra"
+	"google.golang.org/api/tasks/v1"
 )
 
 // listsCmd represents the lists command
@@ -36,8 +24,38 @@ to quickly create a Cobra application.`,
 	},
 }
 
+// listsShowCmd represents lists's subcommand to show takslist
+var listsShowCmd = &cobra.Command{
+	Use:   "show",
+	Short: "show TODO Lists",
+	Long: `show TODO Lists for the google account currently signed in.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("show subcommand called")
+                config := internal.ReadCredentials()
+                client := getClient(config)
+                srv, err := tasks.New(client)
+                if err != nil {
+                    log.Fatalf("Unable to retrieve TODO lists. %v", err)
+                }
+
+                r, err := srv.Tasklists.List().MaxResults(10).Do()
+                if err != nil {
+                    log.Fatalf("Unable to retrieve TODO lists. %v", err)
+                }
+                fmt.Println("TODO Lists:")
+                if len(r.Items) > 0 {
+                    for _, i := range r.Items {
+                        fmt.Printf("%s (%s)\n", i.Title, i.Id)
+                    }
+                } else {
+                        fmt.Println("No TODO Lists found.")
+                }
+            },
+}
+
 func init() {
 	rootCmd.AddCommand(listsCmd)
+        listsCmd.AddCommand(listsShowCmd)
 
 	// Here you will define your flags and configuration settings.
 
