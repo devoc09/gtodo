@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	cloud.google.com/go v0.79.0 // indirect
+	github.com/fatih/color v1.10.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.1.3

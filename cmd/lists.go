@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/devoc09/gtodo/internal"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"google.golang.org/api/tasks/v1"
 )
@@ -12,55 +13,84 @@ import (
 // listsCmd represents the lists command
 var listsCmd = &cobra.Command{
 	Use:   "lists",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Show and Create tasklists for currently singed-in account.",
+        Long: `
+Show and Create TODO Lists for currently singed-in accont.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Show Task Lists:
+  gtodo lists show
+        `,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("lists called")
 	},
 }
 
-// listsShowCmd represents lists's subcommand to show takslist
-var listsShowCmd = &cobra.Command{
+// shwoListCmd represents lists's subcommand to show takslist
+var showListsCmd = &cobra.Command{
 	Use:   "show",
 	Short: "show TODO Lists",
 	Long: `show TODO Lists for the google account currently signed in.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("show subcommand called")
-                config := internal.ReadCredentials()
-                client := getClient(config)
-                srv, err := tasks.New(client)
-                if err != nil {
-                    log.Fatalf("Unable to retrieve TODO lists. %v", err)
-                }
+        Run: func(cmd *cobra.Command, args []string) {
+            fmt.Println("show subcommand called")
+            config := internal.ReadCredentials()
+            client := getClient(config)
+            srv, err := tasks.New(client)
+            if err != nil {
+                log.Fatalf("Unable to retrieve TODO Client. %v", err)
+            }
 
-                r, err := srv.Tasklists.List().MaxResults(10).Do()
-                if err != nil {
-                    log.Fatalf("Unable to retrieve TODO lists. %v", err)
+            r, err := srv.Tasklists.List().MaxResults(10).Do()
+            if err != nil {
+                log.Fatalf("Unable to retrieve TODO lists. %v", err)
+            }
+            fmt.Println("TODO Lists:")
+            if len(r.Items) > 0 {
+                for _, i := range r.Items {
+                    fmt.Printf("%s (%s)\n", i.Title, i.Id)
                 }
-                fmt.Println("TODO Lists:")
-                if len(r.Items) > 0 {
-                    for _, i := range r.Items {
-                        fmt.Printf("%s (%s)\n", i.Title, i.Id)
-                    }
-                } else {
-                        fmt.Println("No TODO Lists found.")
-                }
-            },
+            } else {
+                fmt.Println("No TODO Lists found.")
+            }
+        },
 }
 
+var createListCmd = &cobra.Command{
+    Use: "create",
+    Short: "create TODO List",
+    Long: `create TODO List for the google account currently signed in.`,
+    Run: func(cmd *cobra.Command, args []string) {
+        // fmt.Println("create subcommand called")
+        config := internal.ReadCredentials()
+        clinet := getClient(config)
+        srv, err := tasks.New(clinet)
+        if err != nil {
+            log.Fatalf("Unable to retrieve TODO Client %v", err)
+        }
+        if title == "" {
+            fmt.Println("Title is empty. set any <Title> you want.")
+            return
+        }
+        t := &tasks.TaskList{Title: title}
+        r, err := srv.Tasklists.Insert(t).Do()
+        if err != nil {
+            log.Fatalf("Unable to create TODO List. %v", err)
+        }
+        title = ""
+        fmt.Println("Created TODO List!! " + color.GreenString(r.Title))
+    },
+}
+
+var title string
+
 func init() {
+        createListCmd.Flags().StringVarP(&title, "title", "t", "", "title of TODO List (required)")
 	rootCmd.AddCommand(listsCmd)
-        listsCmd.AddCommand(listsShowCmd)
+        listsCmd.AddCommand(showListsCmd, createListCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
+
+        // and all subcommands, e.g.:
 	// listsCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
