@@ -8,9 +8,9 @@ import (
 
 // GetInstallLocation() to get the install location fo binary
 func GetInstallLocation() string {
-    folderpath, err := osext.ExecutableFolder()
-    if err != nil {
-        log.Fatal(err)
-    }
-    return folderpath
+	folderpath, err := osext.ExecutableFolder()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return folderpath
 }

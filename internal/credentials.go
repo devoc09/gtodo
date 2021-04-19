@@ -11,15 +11,15 @@ import (
 
 // ReadCredentials reads the config.json file
 func ReadCredentials() *oauth2.Config {
-    folderPath := GetInstallLocation()
-    b, err := ioutil.ReadFile(folderPath + "/credentials.json")
-    // b, err := ioutil.ReadFile("credentials.json")
-    if err != nil {
-        log.Fatalf("Unable to read client secret file: %v", err)
-    }
-    config, err := google.ConfigFromJSON(b, tasks.TasksScope)
-    if err != nil {
-        log.Fatalf("Unable to parse client secret file to config: %v", err)
-    }
-    return config
+	folderPath := GetInstallLocation()
+	b, err := ioutil.ReadFile(folderPath + "/credentials.json")
+	// b, err := ioutil.ReadFile("credentials.json")
+	if err != nil {
+		log.Fatalf("Unable to read client secret file: %v", err)
+	}
+	config, err := google.ConfigFromJSON(b, tasks.TasksScope)
+	if err != nil {
+		log.Fatalf("Unable to parse client secret file to config: %v", err)
+	}
+	return config
 }
