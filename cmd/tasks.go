@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/devoc09/gtodo/internal"
 	"github.com/fatih/color"
@@ -40,6 +41,12 @@ var showTasksCmd = &cobra.Command{
 			color.Green("[%d] %s\n", i+1, t.Title)
 			fmt.Printf("  %s: %s\n", color.YellowString("Note"), t.Notes)
 			fmt.Printf("  %s: %s\n", color.YellowString("Status"), t.Status)
+			due, err := time.Parse(time.RFC3339, t.Due)
+			if err != nil {
+				fmt.Printf("  %s: %s\n\n", color.YellowString("Due"), color.BlueString("Date not set"))
+			} else {
+				fmt.Printf("  %s: %s\n\n", color.YellowString("Due"), due.Format("2006/1/2 15:04:05"))
+			}
 		}
 	},
 }
@@ -142,7 +149,6 @@ var rmTasksCmd = &cobra.Command{
 	},
 }
 
-// var listId string = "MDY1NDk2NDkyNjgxMjU2NTAzMzQ6MDow"
 var listId string = internal.LoadConfig().ListId
 var ShowCompletedFlag bool = false
 

@@ -1,16 +1,20 @@
 package internal
 
 import (
-	"log"
-
-	"github.com/kardianos/osext"
+	"os"
+	"path/filepath"
+	"runtime"
 )
 
 // GetInstallLocation() to get the install location fo binary
 func GetInstallLocation() string {
-	folderpath, err := osext.ExecutableFolder()
-	if err != nil {
-		log.Fatal(err)
+	var tokenDir string
+	home := os.Getenv("HOME")
+	if home == "" && runtime.GOOS == "windows" {
+		tokenDir = os.Getenv("APPDATA")
+	} else {
+		tokenDir = filepath.Join(home, ".config")
 	}
-	return folderpath
+	dname := filepath.Join(tokenDir, "gtodo")
+	return dname
 }

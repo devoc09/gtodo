@@ -10,32 +10,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// type Config struct {
-// 	Gtodo Gtodo `yaml:gtodo`
-// }
-
-// type Gtodo struct {
-// 	ListId string `yaml:"listid"`
-// }
-
-// func Load() (*Config, error) {
-// 	viper.SetConfigName("config")
-// 	viper.SetConfigType("yaml")
-// 	viper.AddConfigPath(filepath.Join("$HOME", ".config", "gtodo"))
-
-// 	err := viper.ReadInConfig
-// 	if err != nil {
-// 		return nil, fmt.Errorf("can't read config file: %s \n", err)
-// 	}
-
-// 	var cfg Config
-
-// }
-
-// func ReadDefaultListID() string {
-// 	cfg := Configure()
-// 	return cfg.gtodo.listid
-// }
 type Config struct {
 	ListId string `yaml:"listid"`
 }

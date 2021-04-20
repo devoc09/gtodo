@@ -30,7 +30,6 @@ var showListsCmd = &cobra.Command{
 	Short: "show TODO Lists",
 	Long:  `show TODO Lists for the google account currently signed in.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("show subcommand called")
 		config := internal.ReadCredentials()
 		client := getClient(config)
 		srv, err := tasks.New(client)
@@ -58,7 +57,6 @@ var createListCmd = &cobra.Command{
 	Short: "create TODO List",
 	Long:  `create TODO List for the google account currently signed in.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// fmt.Println("create subcommand called")
 		config := internal.ReadCredentials()
 		clinet := getClient(config)
 		srv, err := tasks.New(clinet)
@@ -85,15 +83,4 @@ func init() {
 	createListCmd.Flags().StringVarP(&title, "title", "t", "", "title of TODO List (required)")
 	rootCmd.AddCommand(listsCmd)
 	listsCmd.AddCommand(showListsCmd, createListCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-
-	// and all subcommands, e.g.:
-	// listsCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// listsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
