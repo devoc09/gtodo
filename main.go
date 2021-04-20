@@ -16,9 +16,9 @@ limitations under the License.
 package main
 
 import (
-    "github.com/devoc09/gtodo/cmd"
+	"github.com/devoc09/gtodo/cmd"
 )
 
 func main() {
-    cmd.Execute()
+	cmd.Execute()
 }

@@ -6,6 +6,7 @@ ssl/
 *.dll
 *.so
 *.dylib
+gtodo
 
 # Test binary, build with `go test -c`
 *.test
@@ -15,3 +16,4 @@ ssl/
 pkg/
 credentials.json
 token.json
+*.swp
