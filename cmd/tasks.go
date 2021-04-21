@@ -43,9 +43,9 @@ var showTasksCmd = &cobra.Command{
 			fmt.Printf("  %s: %s\n", color.YellowString("Status"), t.Status)
 			due, err := time.Parse(time.RFC3339, t.Due)
 			if err != nil {
-				fmt.Printf("  %s: %s\n\n", color.YellowString("Due"), color.BlueString("Date not set"))
+				fmt.Printf("  %s: %s\n", color.YellowString("Due"), color.BlueString("Date not set"))
 			} else {
-				fmt.Printf("  %s: %s\n\n", color.YellowString("Due"), due.Format("2006/1/2 15:04:05"))
+				fmt.Printf("  %s: %s\n", color.YellowString("Due"), due.Format("2006/1/2 15:04:05"))
 			}
 		}
 	},
