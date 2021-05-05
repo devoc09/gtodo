@@ -38,14 +38,22 @@ var showTasksCmd = &cobra.Command{
 			return
 		}
 		for i, t := range tasks {
-			color.Green("[%d] %s\n", i+1, t.Title)
-			fmt.Printf("  %s: %s\n", color.YellowString("Note"), t.Notes)
-			fmt.Printf("  %s: %s\n", color.YellowString("Status"), t.Status)
+			if internal.IsPastDue(t.Due) {
+				color.Red("[%d] %s\n", i+1, t.Title)
+			} else {
+				color.White("[%d] %s\n", i+1, t.Title)
+			}
+			fmt.Printf("%s:   %s\n", color.YellowString("Note"), t.Notes)
+			fmt.Printf("%s: %s\n", color.YellowString("Status"), t.Status)
 			due, err := time.Parse(time.RFC3339, t.Due)
 			if err != nil {
-				fmt.Printf("  %s: %s\n", color.YellowString("Due"), color.BlueString("Date not set"))
+				fmt.Printf("%s:    %s\n", color.YellowString("Due"), color.WhiteString("Not set"))
 			} else {
-				fmt.Printf("  %s: %s\n", color.YellowString("Due"), due.Format("2006/1/2 15:04:05"))
+				if internal.IsPastDue(t.Due) {
+					fmt.Printf("%s:    %s\n", color.YellowString("Due"), color.RedString(due.Format("2006/1/2 15:04:05")))
+				} else {
+					fmt.Printf("%s:    %s\n", color.YellowString("Due"), color.WhiteString(due.Format("2006/1/2 15:04:05")))
+				}
 			}
 		}
 	},
@@ -64,7 +72,9 @@ var addTasksCmd = &cobra.Command{
 		title := internal.GetInput("InputTitle:")
 		note := internal.GetInput("InputNote(press enter skip):")
 		due := internal.GetInput("InputDueDate(ex. 2021-04-01)(press enter skip):")
-		due = due + "T00:00:00.00Z"
+		if due != "" {
+			due = due + "T00:00:00.00Z"
+		}
 		task := internal.CreateTask(title, note, due)
 		r, err := srv.Tasks.Insert(listId, task).Do()
 		if err != nil {
